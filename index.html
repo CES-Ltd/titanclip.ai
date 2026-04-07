@@ -1,0 +1,470 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>TitanClip — AI Company Orchestration Platform</title>
+<meta name="description" content="Command your Digital Legion. Deploy teams of autonomous AI agents with enterprise-grade security, governed orchestration, and real-time analytics.">
+<style>
+/* ─── Reset & Base ─────────────────────────────────────────────── */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; font-size: 16px; }
+body { font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; color: #1d1d1f; line-height: 1.5; overflow-x: hidden; background: #000; }
+img { max-width: 100%; height: auto; display: block; }
+a { color: inherit; text-decoration: none; }
+
+/* ─── CSS Variables ────────────────────────────────────────────── */
+:root {
+  --copper: #d4622a;
+  --copper-light: #e8853a;
+  --copper-glow: rgba(212, 98, 42, 0.3);
+  --ces-orange: #ff6000;
+  --dark: #0a0a0a;
+  --dark-card: #141414;
+  --dark-surface: #1a1a1a;
+  --light: #fbfbfd;
+  --light-card: #f5f5f7;
+  --gray-text: #86868b;
+  --white: #fff;
+  --section-pad: clamp(80px, 12vw, 160px);
+}
+
+/* ─── Scroll Animations ───────────────────────────────────────── */
+.reveal { opacity: 0; transform: translateY(40px); transition: opacity 0.9s cubic-bezier(0.25, 0.46, 0.45, 0.94), transform 0.9s cubic-bezier(0.25, 0.46, 0.45, 0.94); }
+.reveal.visible { opacity: 1; transform: translateY(0); }
+.reveal-left { opacity: 0; transform: translateX(-60px); transition: opacity 0.9s ease, transform 0.9s ease; }
+.reveal-left.visible { opacity: 1; transform: translateX(0); }
+.reveal-right { opacity: 0; transform: translateX(60px); transition: opacity 0.9s ease, transform 0.9s ease; }
+.reveal-right.visible { opacity: 1; transform: translateX(0); }
+.stagger-1 { transition-delay: 0.1s; }
+.stagger-2 { transition-delay: 0.2s; }
+.stagger-3 { transition-delay: 0.3s; }
+.stagger-4 { transition-delay: 0.4s; }
+.stagger-5 { transition-delay: 0.5s; }
+.stagger-6 { transition-delay: 0.6s; }
+
+/* ─── Navigation ───────────────────────────────────────────────── */
+nav { position: fixed; top: 0; left: 0; right: 0; z-index: 100; padding: 16px 40px; display: flex; align-items: center; justify-content: space-between; background: rgba(0,0,0,0.7); backdrop-filter: blur(20px) saturate(180%); -webkit-backdrop-filter: blur(20px) saturate(180%); border-bottom: 1px solid rgba(255,255,255,0.08); transition: background 0.3s; }
+nav .logo-group { display: flex; align-items: center; gap: 12px; }
+nav .logo-group img { height: 32px; width: auto; }
+nav .logo-group span { font-size: 18px; font-weight: 600; color: var(--white); letter-spacing: -0.02em; }
+nav .nav-links { display: flex; gap: 28px; }
+nav .nav-links a { color: rgba(255,255,255,0.8); font-size: 14px; font-weight: 500; transition: color 0.2s; }
+nav .nav-links a:hover { color: var(--copper-light); }
+nav .cta-btn { background: var(--copper); color: var(--white); padding: 8px 20px; border-radius: 20px; font-size: 14px; font-weight: 600; transition: background 0.2s, transform 0.2s; }
+nav .cta-btn:hover { background: var(--copper-light); transform: scale(1.03); }
+
+/* ─── Hero ─────────────────────────────────────────────────────── */
+.hero { min-height: 100vh; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; padding: 120px 24px 80px; background: radial-gradient(ellipse at 50% 30%, rgba(212,98,42,0.12) 0%, transparent 60%), var(--dark); position: relative; overflow: hidden; }
+.hero::before { content: ''; position: absolute; top: -50%; left: -50%; width: 200%; height: 200%; background: conic-gradient(from 0deg at 50% 50%, transparent 0deg, rgba(212,98,42,0.04) 60deg, transparent 120deg, rgba(212,98,42,0.06) 180deg, transparent 240deg, rgba(212,98,42,0.03) 300deg, transparent 360deg); animation: heroRotate 30s linear infinite; }
+@keyframes heroRotate { to { transform: rotate(360deg); } }
+.hero-logo { width: 160px; height: 160px; margin-bottom: 32px; position: relative; z-index: 1; filter: drop-shadow(0 0 40px var(--copper-glow)); animation: logoFloat 4s ease-in-out infinite; }
+@keyframes logoFloat { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-10px); } }
+.hero h1 { font-size: clamp(48px, 8vw, 96px); font-weight: 700; letter-spacing: -0.03em; line-height: 1.05; color: var(--white); position: relative; z-index: 1; margin-bottom: 24px; }
+.hero h1 .gradient { background: linear-gradient(135deg, var(--copper-light), var(--copper), #c44d1a); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+.hero .subtitle { font-size: clamp(16px, 2.2vw, 22px); color: rgba(255,255,255,0.7); max-width: 720px; line-height: 1.6; position: relative; z-index: 1; margin-bottom: 40px; }
+.hero .hero-cta { display: flex; gap: 16px; position: relative; z-index: 1; flex-wrap: wrap; justify-content: center; }
+.hero .hero-cta .btn-primary { background: var(--copper); color: var(--white); padding: 14px 32px; border-radius: 28px; font-size: 17px; font-weight: 600; transition: all 0.3s; border: none; cursor: pointer; }
+.hero .hero-cta .btn-primary:hover { background: var(--copper-light); transform: translateY(-2px); box-shadow: 0 8px 30px var(--copper-glow); }
+.hero .hero-cta .btn-secondary { background: transparent; color: var(--white); padding: 14px 32px; border-radius: 28px; font-size: 17px; font-weight: 600; border: 1.5px solid rgba(255,255,255,0.3); transition: all 0.3s; }
+.hero .hero-cta .btn-secondary:hover { border-color: var(--copper-light); color: var(--copper-light); }
+.scroll-hint { position: absolute; bottom: 32px; left: 50%; transform: translateX(-50%); color: rgba(255,255,255,0.4); animation: bounce 2s infinite; z-index: 1; }
+@keyframes bounce { 0%, 100% { transform: translateX(-50%) translateY(0); } 50% { transform: translateX(-50%) translateY(8px); } }
+
+/* ─── Video Section ────────────────────────────────────────────── */
+.video-section { background: var(--dark); padding: var(--section-pad) 24px; text-align: center; }
+.video-section h2 { font-size: clamp(32px, 5vw, 56px); font-weight: 700; color: var(--white); letter-spacing: -0.02em; margin-bottom: 16px; }
+.video-section .caption { color: var(--gray-text); font-size: 18px; margin-bottom: 48px; }
+.video-wrap { max-width: 1080px; margin: 0 auto; border-radius: 16px; overflow: hidden; box-shadow: 0 20px 80px rgba(0,0,0,0.6); }
+.video-wrap video { width: 100%; display: block; }
+
+/* ─── Feature Grid ─────────────────────────────────────────────── */
+.features { background: var(--light); padding: var(--section-pad) 24px; }
+.features .container { max-width: 1200px; margin: 0 auto; }
+.features h2 { font-size: clamp(36px, 5vw, 56px); font-weight: 700; text-align: center; letter-spacing: -0.02em; margin-bottom: 16px; }
+.features .section-sub { text-align: center; color: var(--gray-text); font-size: 19px; max-width: 640px; margin: 0 auto 60px; }
+.feature-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 24px; }
+.feature-card { background: var(--white); border-radius: 20px; padding: 40px 32px; transition: transform 0.3s, box-shadow 0.3s; }
+.feature-card:hover { transform: translateY(-4px); box-shadow: 0 12px 40px rgba(0,0,0,0.08); }
+.feature-card .icon { font-size: 40px; margin-bottom: 16px; }
+.feature-card h3 { font-size: 22px; font-weight: 600; margin-bottom: 10px; letter-spacing: -0.01em; }
+.feature-card p { color: var(--gray-text); font-size: 15px; line-height: 1.6; }
+
+/* ─── Screenshot Showcases ─────────────────────────────────────── */
+.showcase { padding: var(--section-pad) 24px; }
+.showcase.dark { background: var(--dark); color: var(--white); }
+.showcase.light { background: var(--light); color: #1d1d1f; }
+.showcase .container { max-width: 1200px; margin: 0 auto; display: grid; grid-template-columns: 1fr 1fr; gap: 60px; align-items: center; }
+.showcase.reverse .container { direction: rtl; }
+.showcase.reverse .container > * { direction: ltr; }
+.showcase .text h3 { font-size: clamp(28px, 4vw, 44px); font-weight: 700; letter-spacing: -0.02em; margin-bottom: 16px; }
+.showcase .text p { font-size: 17px; line-height: 1.7; opacity: 0.8; }
+.showcase .text .tag { display: inline-block; background: var(--copper); color: var(--white); padding: 4px 14px; border-radius: 12px; font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 16px; }
+.showcase .screenshot { border-radius: 12px; overflow: hidden; box-shadow: 0 16px 60px rgba(0,0,0,0.25); transition: transform 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94); }
+.showcase .screenshot:hover { transform: scale(1.02) perspective(1000px) rotateY(-2deg); }
+.showcase .screenshot img { width: 100%; }
+
+/* ─── Security Section ─────────────────────────────────────────── */
+.security { background: linear-gradient(180deg, #0a0a0a 0%, #111 100%); padding: var(--section-pad) 24px; color: var(--white); }
+.security .container { max-width: 1200px; margin: 0 auto; text-align: center; }
+.security h2 { font-size: clamp(36px, 5vw, 56px); font-weight: 700; letter-spacing: -0.02em; margin-bottom: 8px; }
+.security .accent-line { width: 60px; height: 3px; background: var(--copper); margin: 16px auto 16px; border-radius: 2px; }
+.security .section-sub { color: var(--gray-text); font-size: 19px; max-width: 640px; margin: 0 auto 60px; }
+.security-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px; text-align: left; }
+.security-card { background: var(--dark-card); border: 1px solid rgba(255,255,255,0.06); border-radius: 16px; padding: 32px 28px; transition: border-color 0.3s, transform 0.3s; }
+.security-card:hover { border-color: var(--copper); transform: translateY(-2px); }
+.security-card .icon { font-size: 32px; margin-bottom: 12px; }
+.security-card h3 { font-size: 18px; font-weight: 600; margin-bottom: 8px; }
+.security-card p { color: rgba(255,255,255,0.55); font-size: 14px; line-height: 1.6; }
+
+/* ─── What's New ───────────────────────────────────────────────── */
+.whats-new { background: var(--light); padding: var(--section-pad) 24px; }
+.whats-new .container { max-width: 900px; margin: 0 auto; }
+.whats-new h2 { font-size: clamp(32px, 5vw, 48px); font-weight: 700; text-align: center; letter-spacing: -0.02em; margin-bottom: 40px; }
+.whats-new table { width: 100%; border-collapse: collapse; }
+.whats-new th { text-align: left; padding: 14px 16px; font-size: 13px; text-transform: uppercase; letter-spacing: 0.06em; color: var(--gray-text); border-bottom: 2px solid #e0e0e0; }
+.whats-new td { padding: 16px; border-bottom: 1px solid #eee; font-size: 15px; vertical-align: top; }
+.whats-new td:first-child { font-weight: 600; white-space: nowrap; width: 220px; color: var(--copper); }
+
+/* ─── Quick Start ──────────────────────────────────────────────── */
+.quickstart { background: var(--light-card); padding: var(--section-pad) 24px; }
+.quickstart .container { max-width: 800px; margin: 0 auto; text-align: center; }
+.quickstart h2 { font-size: clamp(32px, 5vw, 48px); font-weight: 700; letter-spacing: -0.02em; margin-bottom: 40px; }
+.quickstart .code-block { background: #1d1d1f; color: #e0e0e0; text-align: left; padding: 24px 28px; border-radius: 12px; font-family: 'SF Mono', 'Fira Code', monospace; font-size: 14px; line-height: 1.8; margin-bottom: 20px; overflow-x: auto; }
+.quickstart .code-block .comment { color: #6a9955; }
+.quickstart .code-block .cmd { color: #dcdcaa; }
+
+/* ─── Footer ───────────────────────────────────────────────────── */
+footer { background: var(--dark); padding: 60px 24px 40px; text-align: center; color: rgba(255,255,255,0.5); }
+footer .footer-logos { display: flex; align-items: center; justify-content: center; gap: 32px; margin-bottom: 24px; }
+footer .footer-logos img { height: 40px; opacity: 0.8; }
+footer .footer-logos .divider { width: 1px; height: 40px; background: rgba(255,255,255,0.15); }
+footer .credits { font-size: 14px; margin-bottom: 16px; }
+footer .credits a { color: var(--copper-light); }
+footer .credits a:hover { text-decoration: underline; }
+footer .footer-links { display: flex; gap: 24px; justify-content: center; margin-bottom: 24px; }
+footer .footer-links a { font-size: 13px; color: rgba(255,255,255,0.4); }
+footer .footer-links a:hover { color: var(--copper-light); }
+footer .copyright { font-size: 12px; opacity: 0.5; }
+
+/* ─── Mobile ───────────────────────────────────────────────────── */
+@media (max-width: 768px) {
+  nav .nav-links { display: none; }
+  .showcase .container { grid-template-columns: 1fr; gap: 32px; }
+  .showcase.reverse .container { direction: ltr; }
+  .hero-logo { width: 120px; height: 120px; }
+  .feature-grid { grid-template-columns: 1fr; }
+  .security-grid { grid-template-columns: 1fr; }
+}
+</style>
+</head>
+<body>
+
+<!-- ═══ Navigation ═══ -->
+<nav>
+  <div class="logo-group">
+    <img src="assets/titan-claw-logo.png" alt="TitanClip">
+    <span>TitanClip</span>
+  </div>
+  <div class="nav-links">
+    <a href="#features">Features</a>
+    <a href="#screenshots">Product</a>
+    <a href="#security">Security</a>
+    <a href="#quickstart">Get Started</a>
+  </div>
+  <a href="https://github.com/ankurCES/TitanClip/releases/tag/v1.0.0-beta" class="cta-btn">Download</a>
+</nav>
+
+<!-- ═══ Hero ═══ -->
+<section class="hero">
+  <img src="assets/titan-claw-logo.png" alt="TitanClip" class="hero-logo">
+  <h1 class="reveal">Command Your<br><span class="gradient">Digital Legion</span></h1>
+  <p class="subtitle reveal stagger-1">An elite, orchestrated army of AI agents built to scale your enterprise without the risk of going rogue. By replacing chaotic automation with a governed command structure, this workforce integrates fail-safe controls and ironclad guardrails directly into your operations. It's more than just a productivity boost — it's high-velocity intelligence under absolute control.</p>
+  <div class="hero-cta reveal stagger-2">
+    <a href="https://github.com/ankurCES/TitanClip/releases/tag/v1.0.0-beta" class="btn-primary">Download for macOS</a>
+    <a href="https://github.com/ankurCES/TitanClip" class="btn-secondary">View on GitHub</a>
+  </div>
+  <div class="scroll-hint">
+    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M7 13l5 5 5-5M7 7l5 5 5-5"/></svg>
+  </div>
+</section>
+
+<!-- ═══ Video ═══ -->
+<section class="video-section" id="demo">
+  <h2 class="reveal">See it in action</h2>
+  <p class="caption reveal stagger-1">From onboarding to autonomous task execution — watch TitanClip orchestrate an entire agent team.</p>
+  <div class="video-wrap reveal stagger-2">
+    <a href="https://github.com/ankurCES/TitanClip/releases/download/v1.0.0-beta/walkthrough.mov" target="_blank" style="position:relative; display:block;">
+      <img src="assets/dashboard-agents.png" alt="Watch Walkthrough" style="width:100%; filter: brightness(0.7);">
+      <div style="position:absolute; top:50%; left:50%; transform:translate(-50%,-50%); width:80px; height:80px; background:rgba(255,255,255,0.9); border-radius:50%; display:flex; align-items:center; justify-content:center;">
+        <svg width="32" height="32" viewBox="0 0 24 24" fill="#1d1d1f"><polygon points="8,5 20,12 8,19"/></svg>
+      </div>
+      <div style="position:absolute; bottom:20px; left:50%; transform:translateX(-50%); color:#fff; font-size:14px; font-weight:500; opacity:0.8;">Click to download walkthrough video</div>
+    </a>
+  </div>
+</section>
+
+<!-- ═══ Features ═══ -->
+<section class="features" id="features">
+  <div class="container">
+    <h2 class="reveal">Built for Enterprise AI Operations</h2>
+    <p class="section-sub reveal stagger-1">Everything you need to deploy, govern, and scale autonomous agent teams.</p>
+    <div class="feature-grid">
+      <div class="feature-card reveal stagger-1">
+        <div class="icon">&#129302;</div>
+        <h3>Agent Teams</h3>
+        <p>Hire, manage, and orchestrate AI agents with role-based organization. CEO, CTO, Engineers, QA, DevOps — each with defined responsibilities and chain of command.</p>
+      </div>
+      <div class="feature-card reveal stagger-2">
+        <div class="icon">&#128147;</div>
+        <h3>Heartbeat Orchestration</h3>
+        <p>Queue-based wakeup system with execution locking, coalescing, and deferral. Agents wake automatically when tasks are assigned — no polling, no waste.</p>
+      </div>
+      <div class="feature-card reveal stagger-3">
+        <div class="icon">&#128172;</div>
+        <h3>Agent Chat</h3>
+        <p>Real-time conversational interface with streaming responses, tool execution cards, approval prompts, and @agent/@issue mention support.</p>
+      </div>
+      <div class="feature-card reveal stagger-4">
+        <div class="icon">&#128203;</div>
+        <h3>Issue Tracking</h3>
+        <p>Full Kanban board with backlog, todo, in-progress, in-review, done, and blocked. Agents checkout tasks, post updates, and mark completion autonomously.</p>
+      </div>
+      <div class="feature-card reveal stagger-5">
+        <div class="icon">&#128200;</div>
+        <h3>Analytics & Forecasting</h3>
+        <p>Velocity tracking, burndown charts, work distribution, cost trends, and budget forecasting. Know exactly what your agent workforce is delivering.</p>
+      </div>
+      <div class="feature-card reveal stagger-6">
+        <div class="icon">&#128268;</div>
+        <h3>Plugin SDK</h3>
+        <p>Alpha plugin system — register custom tools, add UI contributions, hook into agent lifecycle events. Extend TitanClip without touching core code.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ Screenshots ═══ -->
+<div id="screenshots">
+
+<section class="showcase dark">
+  <div class="container">
+    <div class="text reveal-left">
+      <span class="tag">Dashboard</span>
+      <h3>Real-Time Agent Operations</h3>
+      <p>Monitor every agent in your fleet simultaneously. Live heartbeat runs show executed commands, tool calls, and task progress as they happen. No black boxes — full transparency into what your AI workforce is doing right now.</p>
+    </div>
+    <div class="screenshot reveal-right">
+      <img src="assets/dashboard-agents.png" alt="Agent Dashboard">
+    </div>
+  </div>
+</section>
+
+<section class="showcase light reverse">
+  <div class="container">
+    <div class="text reveal-right">
+      <span class="tag">Command Center</span>
+      <h3>Unified Operations Hub</h3>
+      <p>Agent roster with health status, task pipeline, and activity feed — all in one view. The IAM tab gives you role-based access control purpose-built for autonomous agents, not human users.</p>
+    </div>
+    <div class="screenshot reveal-left">
+      <img src="assets/command-center.png" alt="Command Center">
+    </div>
+  </div>
+</section>
+
+<section class="showcase dark">
+  <div class="container">
+    <div class="text reveal-left">
+      <span class="tag">Issue Board</span>
+      <h3>Autonomous Task Management</h3>
+      <p>Drag-and-drop Kanban with automatic agent assignment. When you create a task, TitanClip finds the least-busy qualified agent and wakes them immediately. Status updates flow automatically as agents work.</p>
+    </div>
+    <div class="screenshot reveal-right">
+      <img src="assets/issues-kanban.png" alt="Issues Kanban">
+    </div>
+  </div>
+</section>
+
+<section class="showcase light reverse">
+  <div class="container">
+    <div class="text reveal-right">
+      <span class="tag">Performance</span>
+      <h3>Agent Leaderboard</h3>
+      <p>Per-agent health scores, completion rates, error rates, utilization metrics, and cost tracking. Identify your top performers, spot bottlenecks, and optimize your agent workforce for maximum throughput.</p>
+    </div>
+    <div class="screenshot reveal-left">
+      <img src="assets/agent-performance.png" alt="Agent Performance">
+    </div>
+  </div>
+</section>
+
+<section class="showcase dark">
+  <div class="container">
+    <div class="text reveal-left">
+      <span class="tag">Analytics</span>
+      <h3>Cost Intelligence & Forecasting</h3>
+      <p>Velocity tracking, burndown charts, work distribution across your agent fleet, and LLM cost trends with budget forecasting. Chargeback reports attribute every dollar to the agent, model, and project that spent it.</p>
+    </div>
+    <div class="screenshot reveal-right">
+      <img src="assets/analytics-forecasting.png" alt="Analytics & Forecasting">
+    </div>
+  </div>
+</section>
+
+<section class="showcase light reverse">
+  <div class="container">
+    <div class="text reveal-right">
+      <span class="tag">Credential Vault</span>
+      <h3>Timed Secret Access</h3>
+      <p>AES-256-GCM encrypted credential store. Agents receive timed tokens with configurable TTL — they never see raw secret values. Max concurrent checkouts and rotation policies ensure secrets stay safe even with fully autonomous agents.</p>
+    </div>
+    <div class="screenshot reveal-left">
+      <img src="assets/credential-vault.png" alt="Credential Vault">
+    </div>
+  </div>
+</section>
+
+</div>
+
+<!-- ═══ Security ═══ -->
+<section class="security" id="security">
+  <div class="container">
+    <h2 class="reveal">Runtime Agentic IAM & RBAC</h2>
+    <div class="accent-line"></div>
+    <p class="section-sub reveal stagger-1">Traditional IAM assumes human users. Agents are different — they run autonomously, make API calls without oversight, and need access to secrets they should never persist. TitanClip solves this.</p>
+    <div class="security-grid">
+      <div class="security-card reveal stagger-1">
+        <div class="icon">&#128272;</div>
+        <h3>Agent Identity</h3>
+        <p>Each agent gets a unique PAPERCLIP_AGENT_ID with short-lived JWT tokens (HS256, 48h TTL). Auto-generated on first run — zero manual key management.</p>
+      </div>
+      <div class="security-card reveal stagger-2">
+        <div class="icon">&#128274;</div>
+        <h3>Credential Vault</h3>
+        <p>AES-256-GCM encrypted secrets with configurable TTL (60s–86400s). Max concurrent checkouts and rotation policies. Agents never see raw values.</p>
+      </div>
+      <div class="security-card reveal stagger-3">
+        <div class="icon">&#128221;</div>
+        <h3>Run-Scoped Access</h3>
+        <p>Every heartbeat run gets a PAPERCLIP_RUN_ID. All agent API calls include this header for full audit traceability. When a run ends, its JWT is invalidated.</p>
+      </div>
+      <div class="security-card reveal stagger-4">
+        <div class="icon">&#128101;</div>
+        <h3>Role-Based Routing</h3>
+        <p>Agents are assigned roles (CEO, CTO, Engineer, QA). The delegation system routes tasks to the right role. Agents cannot self-assign work.</p>
+      </div>
+      <div class="security-card reveal stagger-5">
+        <div class="icon">&#128737;</div>
+        <h3>Autonomy Levels</h3>
+        <p>Per-agent control: sandboxed (no tools), supervised (approval required), autonomous (full access). Approval prompts surface in chat UI.</p>
+      </div>
+      <div class="security-card reveal stagger-6">
+        <div class="icon">&#128270;</div>
+        <h3>Secret Redaction</h3>
+        <p>Tool outputs are scanned for 25+ secret patterns (API keys, JWTs, private keys, database URLs) and automatically redacted before logging or display.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ What's New ═══ -->
+<section class="whats-new" id="whats-new">
+  <div class="container">
+    <h2 class="reveal">What's New Over Paperclip</h2>
+    <table class="reveal stagger-1">
+      <thead><tr><th>Feature</th><th>Description</th></tr></thead>
+      <tbody>
+        <tr><td>Agentic IAM & RBAC</td><td>Identity management purpose-built for autonomous agents — JWT tokens, credential vaults, TTL-based secret access, and full audit trails.</td></tr>
+        <tr><td>Agent Chat</td><td>Interactive chat with streaming, tool execution cards, approval prompts, and #issue/@agent mention support.</td></tr>
+        <tr><td>Heartbeat Wakeup</td><td>Queue-based orchestration — agents wake automatically when issues are assigned, with execution locking and coalescing.</td></tr>
+        <tr><td>9 Adapters</td><td>Claude, Codex, Cursor, Gemini, OpenCode, Pi, OpenClaw, Universal LLM, and generic HTTP/Process adapters.</td></tr>
+        <tr><td>Credential Vault</td><td>AES-256-GCM encrypted secrets with timed token checkout, rotation policies, and max concurrent limits.</td></tr>
+        <tr><td>OKLCH Themes</td><td>Three-point perceptually uniform theme system: Light (clean slate), Dark (midnight), TitanClip (forge).</td></tr>
+        <tr><td>Performance Analytics</td><td>Per-agent health scores, velocity tracking, burndown charts, and cost attribution with chargeback reports.</td></tr>
+        <tr><td>Plugin SDK</td><td>Register custom tools, UI contributions, and lifecycle hooks without touching core code.</td></tr>
+        <tr><td>Bundled Node.js</td><td>Production DMG ships with Node.js v22. End users don't need Node installed.</td></tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<!-- ═══ Quick Start ═══ -->
+<section class="quickstart" id="quickstart">
+  <div class="container">
+    <h2 class="reveal">Get Started in Minutes</h2>
+    <div class="code-block reveal stagger-1">
+      <span class="comment"># Install from DMG (macOS)</span><br>
+      <span class="cmd">Download TitanClip-1.0.0-arm64.dmg from GitHub Releases</span><br>
+      <span class="cmd">Drag to Applications → Launch → Complete onboarding wizard</span><br><br>
+      <span class="comment"># Or build from source</span><br>
+      git clone https://github.com/ankurCES/TitanClip.git<br>
+      cd TitanClip && pnpm install<br>
+      pnpm run build:all<br>
+      pnpm run dev
+    </div>
+    <a href="https://github.com/ankurCES/TitanClip/releases/tag/v1.0.0-beta" class="btn-primary" style="display:inline-block; background:var(--copper); color:#fff; padding:14px 36px; border-radius:28px; font-size:17px; font-weight:600; margin-top:16px;">Download v1.0.0-beta</a>
+  </div>
+</section>
+
+<!-- ═══ Footer ═══ -->
+<footer>
+  <div class="footer-logos reveal">
+    <img src="assets/titan-claw-logo.png" alt="TitanClip" style="height:48px;">
+    <div class="divider"></div>
+    <img src="assets/ces-logo.webp" alt="CES Limited" style="height:36px; filter: brightness(0) invert(1);">
+  </div>
+  <div class="credits">
+    Built by <a href="https://cesltd.com" target="_blank">CES Limited</a> — We Make Enterprise AI Safe by Design
+  </div>
+  <div class="credits" style="font-size:13px;">
+    Powered by <a href="https://github.com/paperclipai/paperclip" target="_blank">Paperclip</a> open-source platform
+  </div>
+  <div class="footer-links">
+    <a href="https://github.com/ankurCES/TitanClip">GitHub</a>
+    <a href="https://github.com/ankurCES/TitanClip/releases">Releases</a>
+    <a href="https://cesltd.com">CES Limited</a>
+  </div>
+  <div class="copyright">&copy; 2026 CES Limited. All rights reserved.</div>
+</footer>
+
+<!-- ═══ Scripts ═══ -->
+<script>
+// Intersection Observer for scroll animations
+const observer = new IntersectionObserver((entries) => {
+  entries.forEach(entry => {
+    if (entry.isIntersecting) {
+      entry.target.classList.add('visible');
+    }
+  });
+}, { threshold: 0.12, rootMargin: '0px 0px -40px 0px' });
+
+document.querySelectorAll('.reveal, .reveal-left, .reveal-right').forEach(el => observer.observe(el));
+
+// Video autoplay on viewport enter
+const videoObserver = new IntersectionObserver((entries) => {
+  entries.forEach(entry => {
+    const video = entry.target;
+    if (entry.isIntersecting) {
+      video.play().catch(() => {});
+    } else {
+      video.pause();
+    }
+  });
+}, { threshold: 0.3 });
+
+document.querySelectorAll('video').forEach(v => videoObserver.observe(v));
+
+// Smooth nav background on scroll
+window.addEventListener('scroll', () => {
+  const nav = document.querySelector('nav');
+  if (window.scrollY > 50) {
+    nav.style.background = 'rgba(0,0,0,0.85)';
+  } else {
+    nav.style.background = 'rgba(0,0,0,0.7)';
+  }
+});
+</script>
+
+</body>
+</html>
