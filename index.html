@@ -13,11 +13,12 @@ body { font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Segoe 
 img { max-width: 100%; height: auto; display: block; }
 a { color: inherit; text-decoration: none; }
 
-/* ─── CSS Variables ────────────────────────────────────────────── */
+/* ─── CSS Variables — TitanClip (default) ─────────────────────── */
 :root {
-  --copper: #d4622a;
-  --copper-light: #e8853a;
-  --copper-glow: rgba(212, 98, 42, 0.3);
+  --accent: #d4622a;
+  --accent-light: #e8853a;
+  --accent-glow: rgba(212, 98, 42, 0.3);
+  --accent-deep: #c44d1a;
   --ces-orange: #ff6000;
   --dark: #0a0a0a;
   --dark-card: #141414;
@@ -27,6 +28,42 @@ a { color: inherit; text-decoration: none; }
   --gray-text: #86868b;
   --white: #fff;
   --section-pad: clamp(80px, 12vw, 160px);
+  --hero-radial: rgba(212,98,42,0.12);
+  --hero-conic1: rgba(212,98,42,0.04);
+  --hero-conic2: rgba(212,98,42,0.06);
+  --hero-conic3: rgba(212,98,42,0.03);
+  --gradient-start: #e8853a;
+  --gradient-mid: #d4622a;
+  --gradient-end: #c44d1a;
+  --security-bg-start: #0a0a0a;
+  --security-bg-end: #111;
+  --transition-speed: 0.6s;
+}
+
+/* ─── TitanX theme override ───────────────────────────────────── */
+body.titanx {
+  --accent: #00d4ff;
+  --accent-light: #33ddff;
+  --accent-glow: rgba(0, 212, 255, 0.3);
+  --accent-deep: #0099ff;
+  --hero-radial: rgba(0, 212, 255, 0.10);
+  --hero-conic1: rgba(0, 153, 255, 0.04);
+  --hero-conic2: rgba(0, 212, 255, 0.06);
+  --hero-conic3: rgba(0, 153, 255, 0.03);
+  --gradient-start: #33ddff;
+  --gradient-mid: #00d4ff;
+  --gradient-end: #0077cc;
+  --security-bg-start: #050a0f;
+  --security-bg-end: #0a1520;
+}
+
+/* ─── Global color transitions ────────────────────────────────── */
+body, nav, .hero, .security, footer {
+  transition: background var(--transition-speed) ease, color var(--transition-speed) ease;
+}
+.hero::before, .hero-logo, nav .cta-btn, .feature-card, .security-card, .showcase .text .tag,
+.accent-line, .btn-primary, .hero .hero-cta .btn-primary {
+  transition: all var(--transition-speed) ease;
 }
 
 /* ─── Scroll Animations ───────────────────────────────────────── */
@@ -47,29 +84,149 @@ a { color: inherit; text-decoration: none; }
 nav { position: fixed; top: 0; left: 0; right: 0; z-index: 100; padding: 16px 40px; display: flex; align-items: center; justify-content: space-between; background: rgba(0,0,0,0.7); backdrop-filter: blur(20px) saturate(180%); -webkit-backdrop-filter: blur(20px) saturate(180%); border-bottom: 1px solid rgba(255,255,255,0.08); transition: background 0.3s; }
 nav .logo-group { display: flex; align-items: center; gap: 12px; }
 nav .logo-group img { height: 32px; width: auto; }
-nav .logo-group span { font-size: 18px; font-weight: 600; color: var(--white); letter-spacing: -0.02em; }
+nav .logo-group .nav-brand-text { font-size: 18px; font-weight: 600; color: var(--white); letter-spacing: -0.02em; }
 nav .nav-links { display: flex; gap: 28px; }
 nav .nav-links a { color: rgba(255,255,255,0.8); font-size: 14px; font-weight: 500; transition: color 0.2s; }
-nav .nav-links a:hover { color: var(--copper-light); }
-nav .cta-btn { background: var(--copper); color: var(--white); padding: 8px 20px; border-radius: 20px; font-size: 14px; font-weight: 600; transition: background 0.2s, transform 0.2s; }
-nav .cta-btn:hover { background: var(--copper-light); transform: scale(1.03); }
+nav .nav-links a:hover { color: var(--accent-light); }
+nav .cta-btn { background: var(--accent); color: var(--white); padding: 8px 20px; border-radius: 20px; font-size: 14px; font-weight: 600; transition: background 0.2s, transform 0.2s; position: relative; }
+nav .cta-btn:hover { background: var(--accent-light); transform: scale(1.03); }
+
+/* ─── Product Toggle ──────────────────────────────────────────── */
+.product-toggle-bar {
+  position: fixed;
+  top: 64px;
+  left: 0;
+  right: 0;
+  z-index: 99;
+  display: flex;
+  justify-content: center;
+  padding: 12px 0;
+  background: rgba(0,0,0,0.5);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border-bottom: 1px solid rgba(255,255,255,0.05);
+}
+
+.product-toggle {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  user-select: none;
+}
+
+.toggle-option {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  cursor: pointer;
+  opacity: 0.5;
+  transition: opacity 0.3s;
+}
+.toggle-option.active { opacity: 1; }
+.toggle-option img { width: 36px; height: 36px; border-radius: 8px; }
+.toggle-option span { color: var(--white); font-size: 15px; font-weight: 600; letter-spacing: -0.01em; }
+
+.toggle-switch {
+  width: 56px;
+  height: 30px;
+  border-radius: 15px;
+  background: #222;
+  border: 2px solid rgba(255,255,255,0.1);
+  position: relative;
+  cursor: pointer;
+  transition: border-color 0.4s, box-shadow 0.4s;
+}
+body.titanclip .toggle-switch {
+  border-color: rgba(212, 98, 42, 0.5);
+  box-shadow: 0 0 16px rgba(212, 98, 42, 0.3), inset 0 0 8px rgba(212, 98, 42, 0.1);
+}
+body.titanx .toggle-switch {
+  border-color: rgba(0, 212, 255, 0.5);
+  box-shadow: 0 0 16px rgba(0, 212, 255, 0.3), inset 0 0 8px rgba(0, 212, 255, 0.1);
+}
+.toggle-knob {
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  position: absolute;
+  top: 2px;
+  left: 2px;
+  transition: transform 0.4s cubic-bezier(0.68, -0.55, 0.27, 1.55), background 0.4s;
+}
+body.titanclip .toggle-knob {
+  background: linear-gradient(135deg, #e8853a, #d4622a);
+  box-shadow: 0 0 10px rgba(212, 98, 42, 0.6);
+}
+body.titanx .toggle-knob {
+  transform: translateX(26px);
+  background: linear-gradient(135deg, #33ddff, #0099ff);
+  box-shadow: 0 0 10px rgba(0, 212, 255, 0.6);
+}
+
+/* ─── Scanline transition effect ──────────────────────────────── */
+.scanline-overlay {
+  position: fixed;
+  top: 0; left: 0; right: 0; bottom: 0;
+  z-index: 9999;
+  pointer-events: none;
+  opacity: 0;
+}
+.scanline-overlay.active {
+  animation: scanlineFlash 0.6s ease-out;
+}
+@keyframes scanlineFlash {
+  0% { opacity: 1; background: repeating-linear-gradient(0deg, transparent 0px, transparent 2px, rgba(255,255,255,0.03) 2px, rgba(255,255,255,0.03) 4px); }
+  20% { opacity: 1; background: repeating-linear-gradient(0deg, transparent 0px, transparent 1px, rgba(255,255,255,0.06) 1px, rgba(255,255,255,0.06) 3px); }
+  100% { opacity: 0; }
+}
+
+/* ─── Product section visibility ──────────────────────────────── */
+.product-titanclip, .product-titanx {
+  transition: opacity 0.35s ease;
+}
+.product-titanclip.hidden, .product-titanx.hidden {
+  display: none;
+}
+.product-titanclip.fading, .product-titanx.fading {
+  opacity: 0;
+}
 
 /* ─── Hero ─────────────────────────────────────────────────────── */
-.hero { min-height: 100vh; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; padding: 120px 24px 80px; background: radial-gradient(ellipse at 50% 30%, rgba(212,98,42,0.12) 0%, transparent 60%), var(--dark); position: relative; overflow: hidden; }
-.hero::before { content: ''; position: absolute; top: -50%; left: -50%; width: 200%; height: 200%; background: conic-gradient(from 0deg at 50% 50%, transparent 0deg, rgba(212,98,42,0.04) 60deg, transparent 120deg, rgba(212,98,42,0.06) 180deg, transparent 240deg, rgba(212,98,42,0.03) 300deg, transparent 360deg); animation: heroRotate 30s linear infinite; }
+.hero { min-height: 100vh; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; padding: 160px 24px 80px; background: radial-gradient(ellipse at 50% 30%, var(--hero-radial) 0%, transparent 60%), var(--dark); position: relative; overflow: hidden; }
+.hero::before { content: ''; position: absolute; top: -50%; left: -50%; width: 200%; height: 200%; background: conic-gradient(from 0deg at 50% 50%, transparent 0deg, var(--hero-conic1) 60deg, transparent 120deg, var(--hero-conic2) 180deg, transparent 240deg, var(--hero-conic3) 300deg, transparent 360deg); animation: heroRotate 30s linear infinite; }
 @keyframes heroRotate { to { transform: rotate(360deg); } }
-.hero-logo { width: 160px; height: 160px; margin-bottom: 32px; position: relative; z-index: 1; filter: drop-shadow(0 0 40px var(--copper-glow)); animation: logoFloat 4s ease-in-out infinite; }
+.hero-logo { width: 160px; height: 160px; margin-bottom: 32px; position: relative; z-index: 1; filter: drop-shadow(0 0 40px var(--accent-glow)); animation: logoFloat 4s ease-in-out infinite; }
 @keyframes logoFloat { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-10px); } }
 .hero h1 { font-size: clamp(48px, 8vw, 96px); font-weight: 700; letter-spacing: -0.03em; line-height: 1.05; color: var(--white); position: relative; z-index: 1; margin-bottom: 24px; }
-.hero h1 .gradient { background: linear-gradient(135deg, var(--copper-light), var(--copper), #c44d1a); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+.hero h1 .gradient { background: linear-gradient(135deg, var(--gradient-start), var(--gradient-mid), var(--gradient-end)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
 .hero .subtitle { font-size: clamp(16px, 2.2vw, 22px); color: rgba(255,255,255,0.7); max-width: 720px; line-height: 1.6; position: relative; z-index: 1; margin-bottom: 40px; }
 .hero .hero-cta { display: flex; gap: 16px; position: relative; z-index: 1; flex-wrap: wrap; justify-content: center; }
-.hero .hero-cta .btn-primary { background: var(--copper); color: var(--white); padding: 14px 32px; border-radius: 28px; font-size: 17px; font-weight: 600; transition: all 0.3s; border: none; cursor: pointer; }
-.hero .hero-cta .btn-primary:hover { background: var(--copper-light); transform: translateY(-2px); box-shadow: 0 8px 30px var(--copper-glow); }
-.hero .hero-cta .btn-secondary { background: transparent; color: var(--white); padding: 14px 32px; border-radius: 28px; font-size: 17px; font-weight: 600; border: 1.5px solid rgba(255,255,255,0.3); transition: all 0.3s; }
-.hero .hero-cta .btn-secondary:hover { border-color: var(--copper-light); color: var(--copper-light); }
+.hero .hero-cta .btn-primary { background: var(--accent); color: var(--white); padding: 14px 32px; border-radius: 28px; font-size: 17px; font-weight: 600; transition: all 0.3s; border: none; cursor: pointer; position: relative; }
+.hero .hero-cta .btn-primary:hover { background: var(--accent-light); transform: translateY(-2px); box-shadow: 0 8px 30px var(--accent-glow); }
+.hero .hero-cta .btn-secondary { background: transparent; color: var(--white); padding: 14px 32px; border-radius: 28px; font-size: 17px; font-weight: 600; border: 1.5px solid rgba(255,255,255,0.3); transition: all 0.3s; position: relative; }
+.hero .hero-cta .btn-secondary:hover { border-color: var(--accent-light); color: var(--accent-light); }
 .scroll-hint { position: absolute; bottom: 32px; left: 50%; transform: translateX(-50%); color: rgba(255,255,255,0.4); animation: bounce 2s infinite; z-index: 1; }
 @keyframes bounce { 0%, 100% { transform: translateX(-50%) translateY(0); } 50% { transform: translateX(-50%) translateY(8px); } }
+
+/* ─── Release badge ───────────────────────────────────────────── */
+.release-badge {
+  display: inline-block;
+  background: rgba(0, 212, 255, 0.15);
+  color: #33ddff;
+  font-size: 11px;
+  font-weight: 700;
+  padding: 3px 10px;
+  border-radius: 10px;
+  border: 1px solid rgba(0, 212, 255, 0.3);
+  margin-left: 8px;
+  vertical-align: middle;
+  letter-spacing: 0.02em;
+  animation: badgePulse 2s ease-in-out infinite;
+}
+@keyframes badgePulse {
+  0%, 100% { box-shadow: 0 0 4px rgba(0, 212, 255, 0.2); }
+  50% { box-shadow: 0 0 12px rgba(0, 212, 255, 0.4); }
+}
 
 /* ─── Video Section ────────────────────────────────────────────── */
 .video-section { background: var(--dark); padding: var(--section-pad) 24px; text-align: center; }
@@ -90,6 +247,15 @@ nav .cta-btn:hover { background: var(--copper-light); transform: scale(1.03); }
 .feature-card h3 { font-size: 22px; font-weight: 600; margin-bottom: 10px; letter-spacing: -0.01em; }
 .feature-card p { color: var(--gray-text); font-size: 15px; line-height: 1.6; }
 
+/* TitanX dark feature cards */
+.features.dark-features { background: var(--dark); }
+.features.dark-features .feature-card { background: var(--dark-card); border: 1px solid rgba(255,255,255,0.06); }
+.features.dark-features .feature-card:hover { border-color: var(--accent); box-shadow: 0 12px 40px rgba(0, 212, 255, 0.1); }
+.features.dark-features h2 { color: var(--white); }
+.features.dark-features .section-sub { color: rgba(255,255,255,0.5); }
+.features.dark-features .feature-card h3 { color: var(--white); }
+.features.dark-features .feature-card p { color: rgba(255,255,255,0.55); }
+
 /* ─── Screenshot Showcases ─────────────────────────────────────── */
 .showcase { padding: var(--section-pad) 24px; }
 .showcase.dark { background: var(--dark); color: var(--white); }
@@ -99,20 +265,20 @@ nav .cta-btn:hover { background: var(--copper-light); transform: scale(1.03); }
 .showcase.reverse .container > * { direction: ltr; }
 .showcase .text h3 { font-size: clamp(28px, 4vw, 44px); font-weight: 700; letter-spacing: -0.02em; margin-bottom: 16px; }
 .showcase .text p { font-size: 17px; line-height: 1.7; opacity: 0.8; }
-.showcase .text .tag { display: inline-block; background: var(--copper); color: var(--white); padding: 4px 14px; border-radius: 12px; font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 16px; }
+.showcase .text .tag { display: inline-block; background: var(--accent); color: var(--white); padding: 4px 14px; border-radius: 12px; font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 16px; }
 .showcase .screenshot { border-radius: 12px; overflow: hidden; box-shadow: 0 16px 60px rgba(0,0,0,0.25); transition: transform 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94); }
 .showcase .screenshot:hover { transform: scale(1.02) perspective(1000px) rotateY(-2deg); }
 .showcase .screenshot img { width: 100%; }
 
 /* ─── Security Section ─────────────────────────────────────────── */
-.security { background: linear-gradient(180deg, #0a0a0a 0%, #111 100%); padding: var(--section-pad) 24px; color: var(--white); }
+.security { background: linear-gradient(180deg, var(--security-bg-start) 0%, var(--security-bg-end) 100%); padding: var(--section-pad) 24px; color: var(--white); }
 .security .container { max-width: 1200px; margin: 0 auto; text-align: center; }
 .security h2 { font-size: clamp(36px, 5vw, 56px); font-weight: 700; letter-spacing: -0.02em; margin-bottom: 8px; }
-.security .accent-line { width: 60px; height: 3px; background: var(--copper); margin: 16px auto 16px; border-radius: 2px; }
+.security .accent-line { width: 60px; height: 3px; background: var(--accent); margin: 16px auto 16px; border-radius: 2px; }
 .security .section-sub { color: var(--gray-text); font-size: 19px; max-width: 640px; margin: 0 auto 60px; }
 .security-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px; text-align: left; }
 .security-card { background: var(--dark-card); border: 1px solid rgba(255,255,255,0.06); border-radius: 16px; padding: 32px 28px; transition: border-color 0.3s, transform 0.3s; }
-.security-card:hover { border-color: var(--copper); transform: translateY(-2px); }
+.security-card:hover { border-color: var(--accent); transform: translateY(-2px); }
 .security-card .icon { font-size: 32px; margin-bottom: 12px; }
 .security-card h3 { font-size: 18px; font-weight: 600; margin-bottom: 8px; }
 .security-card p { color: rgba(255,255,255,0.55); font-size: 14px; line-height: 1.6; }
@@ -124,7 +290,14 @@ nav .cta-btn:hover { background: var(--copper-light); transform: scale(1.03); }
 .whats-new table { width: 100%; border-collapse: collapse; }
 .whats-new th { text-align: left; padding: 14px 16px; font-size: 13px; text-transform: uppercase; letter-spacing: 0.06em; color: var(--gray-text); border-bottom: 2px solid #e0e0e0; }
 .whats-new td { padding: 16px; border-bottom: 1px solid #eee; font-size: 15px; vertical-align: top; }
-.whats-new td:first-child { font-weight: 600; white-space: nowrap; width: 220px; color: var(--copper); }
+.whats-new td:first-child { font-weight: 600; white-space: nowrap; width: 220px; color: var(--accent); }
+
+/* Dark what's-new for TitanX */
+.whats-new.dark-whats-new { background: #0d0d0d; }
+.whats-new.dark-whats-new h2 { color: var(--white); }
+.whats-new.dark-whats-new th { color: rgba(255,255,255,0.4); border-bottom-color: rgba(255,255,255,0.1); }
+.whats-new.dark-whats-new td { color: rgba(255,255,255,0.75); border-bottom-color: rgba(255,255,255,0.06); }
+.whats-new.dark-whats-new td:first-child { color: var(--accent); }
 
 /* ─── Quick Start ──────────────────────────────────────────────── */
 .quickstart { background: var(--light-card); padding: var(--section-pad) 24px; }
@@ -134,17 +307,21 @@ nav .cta-btn:hover { background: var(--copper-light); transform: scale(1.03); }
 .quickstart .code-block .comment { color: #6a9955; }
 .quickstart .code-block .cmd { color: #dcdcaa; }
 
+/* Dark quickstart for TitanX */
+.quickstart.dark-quickstart { background: #080808; }
+.quickstart.dark-quickstart h2 { color: var(--white); }
+
 /* ─── Footer ───────────────────────────────────────────────────── */
 footer { background: var(--dark); padding: 60px 24px 40px; text-align: center; color: rgba(255,255,255,0.5); }
 footer .footer-logos { display: flex; align-items: center; justify-content: center; gap: 32px; margin-bottom: 24px; }
 footer .footer-logos img { height: 40px; opacity: 0.8; }
 footer .footer-logos .divider { width: 1px; height: 40px; background: rgba(255,255,255,0.15); }
 footer .credits { font-size: 14px; margin-bottom: 16px; }
-footer .credits a { color: var(--copper-light); }
+footer .credits a { color: var(--accent-light); }
 footer .credits a:hover { text-decoration: underline; }
 footer .footer-links { display: flex; gap: 24px; justify-content: center; margin-bottom: 24px; }
 footer .footer-links a { font-size: 13px; color: rgba(255,255,255,0.4); }
-footer .footer-links a:hover { color: var(--copper-light); }
+footer .footer-links a:hover { color: var(--accent-light); }
 footer .copyright { font-size: 12px; opacity: 0.5; }
 
 /* ─── Mobile ───────────────────────────────────────────────────── */
@@ -155,16 +332,23 @@ footer .copyright { font-size: 12px; opacity: 0.5; }
   .hero-logo { width: 120px; height: 120px; }
   .feature-grid { grid-template-columns: 1fr; }
   .security-grid { grid-template-columns: 1fr; }
+  .product-toggle-bar { top: 56px; }
+  .hero { padding-top: 180px; }
+  .toggle-option span { font-size: 13px; }
+  .toggle-option img { width: 28px; height: 28px; }
 }
 </style>
 </head>
-<body>
+<body class="titanclip">
+
+<!-- Scanline overlay for transitions -->
+<div class="scanline-overlay" id="scanline"></div>
 
 <!-- ═══ Navigation ═══ -->
 <nav>
   <div class="logo-group">
-    <img src="assets/titan-claw-logo.png" alt="TitanClip">
-    <span>TitanClip</span>
+    <img src="assets/titan-claw-logo.png" alt="TitanClip" id="nav-logo">
+    <span class="nav-brand-text" id="nav-brand">TitanClip</span>
     <div class="divider" style="width:1px;height:24px;background:rgba(255,255,255,0.2);margin:0 4px;"></div>
     <a href="https://cesltd.com" target="_blank" style="display:flex;align-items:center;gap:6px;">
       <img src="assets/ces-logo.png" alt="CES" style="height:24px;border-radius:4px;">
@@ -177,10 +361,32 @@ footer .copyright { font-size: 12px; opacity: 0.5; }
     <a href="#security">Security</a>
     <a href="#quickstart">Get Started</a>
   </div>
-  <a href="https://github.com/CES-Ltd/TitanClip/releases/download/v1.0.0-beta/TitanClip-1.0.0-arm64.dmg" class="cta-btn">Download</a>
+  <a href="https://github.com/CES-Ltd/TitanClip/releases/download/v1.0.0-beta/TitanClip-1.0.0-arm64.dmg" class="cta-btn" id="nav-cta">Download</a>
 </nav>
 
-<!-- ═══ Hero ═══ -->
+<!-- ═══ Product Toggle ═══ -->
+<div class="product-toggle-bar">
+  <div class="product-toggle">
+    <div class="toggle-option active" id="opt-titanclip" onclick="switchProduct('titanclip')">
+      <img src="assets/titan-claw-logo.png" alt="TitanClip">
+      <span>TitanClip</span>
+    </div>
+    <div class="toggle-switch" id="toggle-switch" onclick="toggleProduct()">
+      <div class="toggle-knob" id="toggle-knob"></div>
+    </div>
+    <div class="toggle-option" id="opt-titanx" onclick="switchProduct('titanx')">
+      <img src="assets/titanx-logo.png" alt="TitanX">
+      <span>TitanX</span>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════════════════════ -->
+<!-- ═══ TITANCLIP CONTENT ═══ -->
+<!-- ══════════════════════════════════════════════════════════════ -->
+<div class="product-titanclip" id="content-titanclip">
+
+<!-- Hero -->
 <section class="hero">
   <img src="assets/titan-claw-logo.png" alt="TitanClip" class="hero-logo">
   <h1 class="reveal">Command Your<br><span class="gradient">Digital Legion</span></h1>
@@ -194,7 +400,7 @@ footer .copyright { font-size: 12px; opacity: 0.5; }
   </div>
 </section>
 
-<!-- ═══ Video ═══ -->
+<!-- Video -->
 <section class="video-section" id="demo">
   <h2 class="reveal">See it in action</h2>
   <p class="caption reveal stagger-1">From onboarding to autonomous task execution — watch TitanClip orchestrate an entire agent team.</p>
@@ -209,7 +415,7 @@ footer .copyright { font-size: 12px; opacity: 0.5; }
   </div>
 </section>
 
-<!-- ═══ Features ═══ -->
+<!-- Features -->
 <section class="features" id="features">
   <div class="container">
     <h2 class="reveal">Built for Enterprise AI Operations</h2>
@@ -249,7 +455,7 @@ footer .copyright { font-size: 12px; opacity: 0.5; }
   </div>
 </section>
 
-<!-- ═══ Screenshots ═══ -->
+<!-- Screenshots -->
 <div id="screenshots">
 
 <section class="showcase dark">
@@ -332,7 +538,7 @@ footer .copyright { font-size: 12px; opacity: 0.5; }
 
 </div>
 
-<!-- ═══ Security ═══ -->
+<!-- Security -->
 <section class="security" id="security">
   <div class="container">
     <h2 class="reveal">Runtime Agentic IAM & RBAC</h2>
@@ -347,7 +553,7 @@ footer .copyright { font-size: 12px; opacity: 0.5; }
       <div class="security-card reveal stagger-2">
         <div class="icon">&#128274;</div>
         <h3>Credential Vault</h3>
-        <p>AES-256-GCM encrypted secrets with configurable TTL (60s–86400s). Max concurrent checkouts and rotation policies. Agents never see raw values.</p>
+        <p>AES-256-GCM encrypted secrets with configurable TTL (60s-86400s). Max concurrent checkouts and rotation policies. Agents never see raw values.</p>
       </div>
       <div class="security-card reveal stagger-3">
         <div class="icon">&#128221;</div>
@@ -373,7 +579,7 @@ footer .copyright { font-size: 12px; opacity: 0.5; }
   </div>
 </section>
 
-<!-- ═══ What's New ═══ -->
+<!-- What's New -->
 <section class="whats-new" id="whats-new">
   <div class="container">
     <h2 class="reveal">What's New Over Paperclip</h2>
@@ -394,7 +600,7 @@ footer .copyright { font-size: 12px; opacity: 0.5; }
   </div>
 </section>
 
-<!-- ═══ Quick Start ═══ -->
+<!-- Quick Start -->
 <section class="quickstart" id="quickstart">
   <div class="container">
     <h2 class="reveal">Get Started in Minutes</h2>
@@ -408,24 +614,308 @@ footer .copyright { font-size: 12px; opacity: 0.5; }
       pnpm run build:all<br>
       pnpm run dev
     </div>
-    <a href="https://github.com/CES-Ltd/TitanClip/releases/download/v1.0.0-beta/TitanClip-1.0.0-arm64.dmg" class="btn-primary" style="display:inline-block; background:var(--copper); color:#fff; padding:14px 36px; border-radius:28px; font-size:17px; font-weight:600; margin-top:16px;">Download v1.0.0-beta</a>
+    <a href="https://github.com/CES-Ltd/TitanClip/releases/download/v1.0.0-beta/TitanClip-1.0.0-arm64.dmg" class="btn-primary" style="display:inline-block; background:var(--accent); color:#fff; padding:14px 36px; border-radius:28px; font-size:17px; font-weight:600; margin-top:16px;">Download v1.0.0-beta</a>
   </div>
 </section>
+
+</div>
+<!-- END TITANCLIP CONTENT -->
+
+
+<!-- ══════════════════════════════════════════════════════════════ -->
+<!-- ═══ TITANX CONTENT ═══ -->
+<!-- ══════════════════════════════════════════════════════════════ -->
+<div class="product-titanx hidden" id="content-titanx">
+
+<!-- Hero -->
+<section class="hero">
+  <img src="assets/titanx-logo.png" alt="TitanX" class="hero-logo">
+  <h1 class="reveal visible">Hardened AI<br><span class="gradient">Infrastructure</span></h1>
+  <p class="subtitle reveal visible">The security-first orchestration platform for mission-critical AI deployments. TitanX fuses enterprise-grade agent management with deny-by-default network policies, HMAC-signed audit logs, and runtime IAM enforcement — so your agents operate under absolute control, not just convenience.</p>
+  <div class="hero-cta reveal visible">
+    <a href="#" class="btn-primary">Download for macOS <span class="release-badge">Releasing April 14</span></a>
+    <a href="#" class="btn-secondary">View on GitHub <span class="release-badge">Releasing April 14</span></a>
+  </div>
+  <div class="scroll-hint">
+    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M7 13l5 5 5-5M7 7l5 5 5-5"/></svg>
+  </div>
+</section>
+
+<!-- Video - TitanX demo -->
+<section class="video-section">
+  <h2 class="reveal visible">See TitanX in action</h2>
+  <p class="caption reveal visible">Navigate the hardened control plane — from workflow orchestration to network policy enforcement.</p>
+  <div class="video-wrap reveal visible">
+    <video autoplay muted loop playsinline>
+      <source src="assets/titanx-demo-navigation.mp4" type="video/mp4">
+    </video>
+  </div>
+</section>
+
+<!-- Features -->
+<section class="features dark-features" id="tx-features">
+  <div class="container">
+    <h2 class="reveal visible">Built for Mission-Critical AI</h2>
+    <p class="section-sub reveal visible">Ten pillars of hardened agent infrastructure — from workflow orchestration to tamper-proof audit trails.</p>
+    <div class="feature-grid">
+      <div class="feature-card reveal visible stagger-1">
+        <div class="icon">&#129302;</div>
+        <h3>Multi-Agent Orchestration</h3>
+        <p>Lead agent with MCP tools across 20+ LLM providers. Role-based team hierarchy with automatic delegation, escalation, and chain-of-command governance.</p>
+      </div>
+      <div class="feature-card reveal visible stagger-2">
+        <div class="icon">&#9881;&#65039;</div>
+        <h3>n8n-Inspired Workflow Engine</h3>
+        <p>Visual DAG execution with triggers, conditions, human-in-the-loop approvals, and parallel branches. Build complex agent pipelines without code.</p>
+      </div>
+      <div class="feature-card reveal visible stagger-3">
+        <div class="icon">&#129504;</div>
+        <h3>LangChain Agent Memory</h3>
+        <p>Buffer, summary, entity, and long-term memory stores. Agents maintain persistent context across sessions with configurable retention and retrieval strategies.</p>
+      </div>
+      <div class="feature-card reveal visible stagger-4">
+        <div class="icon">&#128209;</div>
+        <h3>DeepAgents Planning</h3>
+        <p>Structured plans with delegation trees, reflection loops, and goal decomposition. Agents break complex objectives into executable sub-tasks autonomously.</p>
+      </div>
+      <div class="feature-card reveal visible stagger-5">
+        <div class="icon">&#128269;</div>
+        <h3>LangSmith Traces</h3>
+        <p>Hierarchical execution traces with token attribution, latency breakdowns, and feedback scoring. Debug agent behavior with full causal chain visibility.</p>
+      </div>
+      <div class="feature-card reveal visible stagger-6">
+        <div class="icon">&#128737;&#65039;</div>
+        <h3>NemoClaw Network Policies</h3>
+        <p>Deny-by-default egress with 11 presets, SSRF protection, RFC1918 blocking, and DNS rebinding defense. Agents only reach what you explicitly allow.</p>
+      </div>
+      <div class="feature-card reveal visible stagger-1">
+        <div class="icon">&#128736;</div>
+        <h3>Agent Blueprints</h3>
+        <p>Four security profiles — sandboxed, developer, researcher, and CI — with pre-configured tool permissions, network policies, and filesystem tiers.</p>
+      </div>
+      <div class="feature-card reveal visible stagger-2">
+        <div class="icon">&#128273;</div>
+        <h3>Comprehensive IAM</h3>
+        <p>Granular tool-level permissions with agent binding. Every tool call is checked against IAM policies at runtime — not just at configuration time.</p>
+      </div>
+      <div class="feature-card reveal visible stagger-3">
+        <div class="icon">&#128220;</div>
+        <h3>HMAC-Signed Audit Logs</h3>
+        <p>Tamper-detectable audit trail with 100+ action types, SHA-256 chain integrity, and HMAC signatures. Compliance-ready from day one.</p>
+      </div>
+      <div class="feature-card reveal visible stagger-4">
+        <div class="icon">&#128225;</div>
+        <h3>OpenTelemetry</h3>
+        <p>OTLP exporters for spans, metrics, and logs. Ship agent telemetry to Grafana, Datadog, or any OTLP-compatible backend with zero custom instrumentation.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Screenshots -->
+<div id="tx-screenshots">
+
+<section class="showcase dark">
+  <div class="container">
+    <div class="text reveal-left visible">
+      <span class="tag">Home</span>
+      <h3>Hardened Control Plane</h3>
+      <p>A unified dashboard purpose-built for security-conscious AI operations. Monitor agent health, active workflows, memory utilization, and security posture — all from a single pane of glass with real-time telemetry feeds.</p>
+    </div>
+    <div class="screenshot reveal-right visible">
+      <img src="assets/titanx-home.png" alt="TitanX Home">
+    </div>
+  </div>
+</section>
+
+<section class="showcase light reverse">
+  <div class="container">
+    <div class="text reveal-right visible">
+      <span class="tag">Workflows</span>
+      <h3>Visual DAG Orchestration</h3>
+      <p>Build complex multi-agent pipelines with a drag-and-drop workflow editor. Triggers, conditions, parallel branches, human approvals, and error handlers — all connected in an n8n-inspired visual canvas.</p>
+    </div>
+    <div class="screenshot reveal-left visible">
+      <img src="assets/titanx-workflow.png" alt="TitanX Workflows">
+    </div>
+  </div>
+</section>
+
+<section class="showcase dark">
+  <div class="container">
+    <div class="text reveal-left visible">
+      <span class="tag">Blueprints</span>
+      <h3>Security Profile Templates</h3>
+      <p>Pre-configured agent profiles for common deployment patterns. Sandboxed agents for untrusted tasks, developer agents with repo access, researcher agents with web access, and CI agents for automated pipelines — each locked down by default.</p>
+    </div>
+    <div class="screenshot reveal-right visible">
+      <img src="assets/titanx-blueprints.png" alt="TitanX Blueprints">
+    </div>
+  </div>
+</section>
+
+<section class="showcase light reverse">
+  <div class="container">
+    <div class="text reveal-right visible">
+      <span class="tag">Observability</span>
+      <h3>Full-Stack Agent Telemetry</h3>
+      <p>LangSmith-style hierarchical traces with token attribution and latency breakdowns. OpenTelemetry OTLP exporters ship spans, metrics, and logs to your existing observability stack — Grafana, Datadog, or any compatible backend.</p>
+    </div>
+    <div class="screenshot reveal-left visible">
+      <img src="assets/titanx-observability.png" alt="TitanX Observability">
+    </div>
+  </div>
+</section>
+
+<section class="showcase dark">
+  <div class="container">
+    <div class="text reveal-left visible">
+      <span class="tag">Audit</span>
+      <h3>Tamper-Proof Audit Trail</h3>
+      <p>Every governance action is logged with HMAC-SHA256 signatures and chain integrity verification. 100+ action types covering tool calls, credential access, policy changes, and agent lifecycle events. Export to SIEM or compliance systems.</p>
+    </div>
+    <div class="screenshot reveal-right visible">
+      <img src="assets/titanx-audit.png" alt="TitanX Audit Logs">
+    </div>
+  </div>
+</section>
+
+<section class="showcase light reverse">
+  <div class="container">
+    <div class="text reveal-right visible">
+      <span class="tag">IAM</span>
+      <h3>Granular Policy Builder</h3>
+      <p>Define tool-level permissions with agent binding, time-based access windows, and conditional rules. The IAM policy engine evaluates every tool invocation at runtime — not just at deploy time — ensuring continuous enforcement.</p>
+    </div>
+    <div class="screenshot reveal-left visible">
+      <img src="assets/titanx-iam.png" alt="TitanX IAM">
+    </div>
+  </div>
+</section>
+
+</div>
+
+<!-- Security Video -->
+<section class="video-section">
+  <h2 class="reveal visible">Security Deep Dive</h2>
+  <p class="caption reveal visible">Watch how TitanX enforces deny-by-default policies, SSRF protection, and runtime IAM checks.</p>
+  <div class="video-wrap reveal visible">
+    <video autoplay muted loop playsinline>
+      <source src="assets/titanx-demo-security.mp4" type="video/mp4">
+    </video>
+  </div>
+</section>
+
+<!-- Security -->
+<section class="security" id="tx-security">
+  <div class="container">
+    <h2 class="reveal visible">Zero-Trust Agent Security</h2>
+    <div class="accent-line"></div>
+    <p class="section-sub reveal visible">Every agent is untrusted by default. TitanX enforces security at every layer — from network egress to tool invocation — with cryptographic proof and continuous runtime verification.</p>
+    <div class="security-grid">
+      <div class="security-card reveal visible stagger-1">
+        <div class="icon">&#128272;</div>
+        <h3>Runtime IAM Enforcement</h3>
+        <p>Every tool call is checked against IAM policies in real-time. Granular permissions per agent, per tool, with time-based access windows and conditional rules.</p>
+      </div>
+      <div class="security-card reveal visible stagger-2">
+        <div class="icon">&#128683;</div>
+        <h3>Deny-by-Default Egress</h3>
+        <p>NemoClaw-inspired network policies block all outbound traffic by default. 11 presets for common patterns. Agents reach only explicitly whitelisted endpoints.</p>
+      </div>
+      <div class="security-card reveal visible stagger-3">
+        <div class="icon">&#128737;&#65039;</div>
+        <h3>SSRF Protection</h3>
+        <p>RFC1918 private address blocking, DNS rebinding defense, and cloud metadata endpoint protection. Prevents agents from pivoting to internal infrastructure.</p>
+      </div>
+      <div class="security-card reveal visible stagger-4">
+        <div class="icon">&#128736;</div>
+        <h3>Security Blueprints</h3>
+        <p>Four agent profiles — sandboxed, developer, researcher, CI — with pre-configured tool access, network policies, and filesystem permissions. Deploy safely in minutes.</p>
+      </div>
+      <div class="security-card reveal visible stagger-5">
+        <div class="icon">&#128274;</div>
+        <h3>AES-256-GCM Secrets Vault</h3>
+        <p>Encrypted credential store with timed token checkout, auto-rotation, and max concurrent limits. Agents receive ephemeral access — never raw secret values.</p>
+      </div>
+      <div class="security-card reveal visible stagger-6">
+        <div class="icon">&#128276;</div>
+        <h3>Session Tokens</h3>
+        <p>Auto-revoking session tokens with configurable TTL. When an agent session ends, all associated tokens are immediately invalidated across the system.</p>
+      </div>
+      <div class="security-card reveal visible stagger-1">
+        <div class="icon">&#128193;</div>
+        <h3>Filesystem Access Tiers</h3>
+        <p>Four tiers — none, read-only, workspace-scoped, and full — enforced at the runtime level. Agents cannot escape their designated filesystem sandbox.</p>
+      </div>
+      <div class="security-card reveal visible stagger-2">
+        <div class="icon">&#128296;</div>
+        <h3>10 Security Toggles</h3>
+        <p>Fine-grained feature flags for shell execution, network access, file writes, secret access, and more. Enable exactly what each agent needs — nothing more.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- What's New — TitanX -->
+<section class="whats-new dark-whats-new" id="tx-whats-new">
+  <div class="container">
+    <h2 class="reveal visible">What TitanX Adds Over TitanClip</h2>
+    <table class="reveal visible">
+      <thead><tr><th>Capability</th><th>Description</th></tr></thead>
+      <tbody>
+        <tr><td>Workflow Engine</td><td>n8n-inspired visual DAG orchestration with triggers, conditions, approvals, parallel branches, and error handlers.</td></tr>
+        <tr><td>Agent Memory</td><td>LangChain-style buffer, summary, entity, and long-term memory with configurable retention strategies.</td></tr>
+        <tr><td>Planning System</td><td>DeepAgents-inspired structured plans with delegation trees, reflection loops, and autonomous goal decomposition.</td></tr>
+        <tr><td>Execution Traces</td><td>LangSmith-style hierarchical traces with token attribution, latency breakdowns, and feedback scoring.</td></tr>
+        <tr><td>Network Policies</td><td>NemoClaw deny-by-default egress with 11 presets, SSRF protection, and DNS rebinding defense.</td></tr>
+        <tr><td>Agent Blueprints</td><td>Four security profiles (sandboxed, developer, researcher, CI) with pre-configured permissions.</td></tr>
+        <tr><td>IAM Policies</td><td>Granular tool-level permissions with agent binding and continuous runtime enforcement.</td></tr>
+        <tr><td>HMAC Audit Logs</td><td>Tamper-detectable audit trail with SHA-256 chain integrity and 100+ action types.</td></tr>
+        <tr><td>OpenTelemetry</td><td>OTLP exporters for spans, metrics, and logs — ship to Grafana, Datadog, or any compatible backend.</td></tr>
+        <tr><td>Security Toggles</td><td>10 fine-grained feature flags for shell, network, filesystem, secrets, and tool access control.</td></tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<!-- Quick Start — TitanX -->
+<section class="quickstart dark-quickstart" id="tx-quickstart">
+  <div class="container">
+    <h2 class="reveal visible">Get Started with TitanX</h2>
+    <div class="code-block reveal visible">
+      <span class="comment"># Install from DMG (macOS) — releasing April 14</span><br>
+      <span class="cmd">Download TitanX-1.0.0-arm64.dmg from GitHub Releases</span><br>
+      <span class="cmd">Drag to Applications &rarr; Launch &rarr; Complete security onboarding</span><br><br>
+      <span class="comment"># Or build from source</span><br>
+      git clone https://github.com/ankurCES/TitanX.git<br>
+      cd TitanX && bun install<br>
+      bun run build:all<br>
+      bun run dev
+    </div>
+    <a href="#" class="btn-primary" style="display:inline-block; background:var(--accent); color:#fff; padding:14px 36px; border-radius:28px; font-size:17px; font-weight:600; margin-top:16px;">Coming April 14 <span class="release-badge">Releasing April 14</span></a>
+  </div>
+</section>
+
+</div>
+<!-- END TITANX CONTENT -->
+
 
 <!-- ═══ Footer ═══ -->
 <footer>
   <div class="footer-logos reveal">
-    <img src="assets/titan-claw-logo.png" alt="TitanClip" style="height:48px;">
+    <img src="assets/titan-claw-logo.png" alt="TitanClip" id="footer-logo-clip" style="height:48px;">
+    <img src="assets/titanx-logo.png" alt="TitanX" id="footer-logo-x" style="height:48px; display:none;">
     <div class="divider"></div>
     <img src="assets/ces-logo.png" alt="CES Limited" style="height:36px; border-radius:6px;">
   </div>
   <div class="credits">
     Built by <a href="https://cesltd.com" target="_blank">CES Limited</a> — We Make Enterprise AI Safe by Design
   </div>
-  <div class="credits" style="font-size:13px;">
+  <div class="credits" style="font-size:13px;" id="footer-powered">
     Powered by <a href="https://github.com/paperclipai/paperclip" target="_blank">Paperclip</a> open-source platform
   </div>
-  <div class="footer-links">
+  <div class="footer-links" id="footer-links">
     <a href="https://github.com/ankurCES/TitanClip">GitHub</a>
     <a href="https://github.com/ankurCES/TitanClip/releases">Releases</a>
     <a href="https://cesltd.com">CES Limited</a>
@@ -435,7 +925,81 @@ footer .copyright { font-size: 12px; opacity: 0.5; }
 
 <!-- ═══ Scripts ═══ -->
 <script>
-// Intersection Observer for scroll animations
+// ─── Product toggle logic ─────────────────────────────────────
+let currentProduct = 'titanclip';
+
+function switchProduct(product) {
+  if (product === currentProduct) return;
+  currentProduct = product;
+
+  // Trigger scanline
+  const scanline = document.getElementById('scanline');
+  scanline.classList.remove('active');
+  void scanline.offsetWidth; // reflow
+  scanline.classList.add('active');
+
+  // Toggle body class
+  document.body.classList.remove('titanclip', 'titanx');
+  document.body.classList.add(product);
+
+  // Toggle option highlighting
+  document.getElementById('opt-titanclip').classList.toggle('active', product === 'titanclip');
+  document.getElementById('opt-titanx').classList.toggle('active', product === 'titanx');
+
+  // Swap nav elements
+  const navLogo = document.getElementById('nav-logo');
+  const navBrand = document.getElementById('nav-brand');
+  const navCta = document.getElementById('nav-cta');
+
+  if (product === 'titanx') {
+    navLogo.src = 'assets/titanx-logo.png';
+    navLogo.alt = 'TitanX';
+    navBrand.textContent = 'TitanX';
+    navCta.textContent = 'Coming Soon';
+    navCta.href = '#';
+  } else {
+    navLogo.src = 'assets/titan-claw-logo.png';
+    navLogo.alt = 'TitanClip';
+    navBrand.textContent = 'TitanClip';
+    navCta.textContent = 'Download';
+    navCta.href = 'https://github.com/CES-Ltd/TitanClip/releases/download/v1.0.0-beta/TitanClip-1.0.0-arm64.dmg';
+  }
+
+  // Footer swap
+  document.getElementById('footer-logo-clip').style.display = product === 'titanclip' ? 'block' : 'none';
+  document.getElementById('footer-logo-x').style.display = product === 'titanx' ? 'block' : 'none';
+
+  if (product === 'titanx') {
+    document.getElementById('footer-powered').innerHTML = 'Built on <a href="https://github.com/ankurCES/TitanClip" target="_blank">TitanClip</a> open-source platform';
+    document.getElementById('footer-links').innerHTML = '<a href="#">GitHub (coming soon)</a><a href="#">Releases</a><a href="https://cesltd.com">CES Limited</a>';
+  } else {
+    document.getElementById('footer-powered').innerHTML = 'Powered by <a href="https://github.com/paperclipai/paperclip" target="_blank">Paperclip</a> open-source platform';
+    document.getElementById('footer-links').innerHTML = '<a href="https://github.com/ankurCES/TitanClip">GitHub</a><a href="https://github.com/ankurCES/TitanClip/releases">Releases</a><a href="https://cesltd.com">CES Limited</a>';
+  }
+
+  // Cross-fade content sections
+  const clipContent = document.getElementById('content-titanclip');
+  const txContent = document.getElementById('content-titanx');
+  const showing = product === 'titanclip' ? clipContent : txContent;
+  const hiding = product === 'titanclip' ? txContent : clipContent;
+
+  hiding.classList.add('fading');
+  setTimeout(() => {
+    hiding.classList.add('hidden');
+    hiding.classList.remove('fading');
+    showing.classList.remove('hidden');
+    // Scroll to top smoothly
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+    // Re-observe reveal elements in the newly shown section
+    reobserveReveals();
+  }, 350);
+}
+
+function toggleProduct() {
+  switchProduct(currentProduct === 'titanclip' ? 'titanx' : 'titanclip');
+}
+
+// ─── Intersection Observer for scroll animations ──────────────
 const observer = new IntersectionObserver((entries) => {
   entries.forEach(entry => {
     if (entry.isIntersecting) {
@@ -444,9 +1008,13 @@ const observer = new IntersectionObserver((entries) => {
   });
 }, { threshold: 0.12, rootMargin: '0px 0px -40px 0px' });
 
+function reobserveReveals() {
+  document.querySelectorAll('.reveal:not(.visible), .reveal-left:not(.visible), .reveal-right:not(.visible)').forEach(el => observer.observe(el));
+}
+
 document.querySelectorAll('.reveal, .reveal-left, .reveal-right').forEach(el => observer.observe(el));
 
-// Video autoplay on viewport enter
+// ─── Video autoplay on viewport enter ─────────────────────────
 const videoObserver = new IntersectionObserver((entries) => {
   entries.forEach(entry => {
     const video = entry.target;
@@ -460,7 +1028,7 @@ const videoObserver = new IntersectionObserver((entries) => {
 
 document.querySelectorAll('video').forEach(v => videoObserver.observe(v));
 
-// Smooth nav background on scroll
+// ─── Smooth nav background on scroll ──────────────────────────
 window.addEventListener('scroll', () => {
   const nav = document.querySelector('nav');
   if (window.scrollY > 50) {
