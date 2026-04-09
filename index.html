@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>TitanClip — AI Company Orchestration Platform</title>
+<title>TitanX — Enterprise AI Agent Orchestration Platform</title>
 <meta name="description" content="Command your Digital Legion. Deploy teams of autonomous AI agents with enterprise-grade security, governed orchestration, and real-time analytics.">
 <style>
 /* ─── Reset & Base ─────────────────────────────────────────────── */
@@ -81,15 +81,17 @@ body, nav, .hero, .security, footer {
 .stagger-6 { transition-delay: 0.6s; }
 
 /* ─── Navigation ───────────────────────────────────────────────── */
-nav { position: fixed; top: 0; left: 0; right: 0; z-index: 100; padding: 16px 40px; display: flex; align-items: center; justify-content: space-between; background: rgba(0,0,0,0.7); backdrop-filter: blur(20px) saturate(180%); -webkit-backdrop-filter: blur(20px) saturate(180%); border-bottom: 1px solid rgba(255,255,255,0.08); transition: background 0.3s; }
+nav { position: fixed; top: 0; left: 0; right: 0; z-index: 10002; padding: 16px 40px; display: flex; align-items: center; justify-content: space-between; background: rgba(0,0,0,0.7); backdrop-filter: blur(20px) saturate(180%); -webkit-backdrop-filter: blur(20px) saturate(180%); border-bottom: 1px solid rgba(255,255,255,0.08); transition: background 0.3s; }
 nav .logo-group { display: flex; align-items: center; gap: 12px; }
 nav .logo-group img { height: 32px; width: auto; }
 nav .logo-group .nav-brand-text { font-size: 18px; font-weight: 600; color: var(--white); letter-spacing: -0.02em; }
 nav .nav-links { display: flex; gap: 28px; }
-nav .nav-links a { color: rgba(255,255,255,0.8); font-size: 14px; font-weight: 500; transition: color 0.2s; }
+nav .nav-links a { color: rgba(255,255,255,0.8); font-size: 14px; font-weight: 500; transition: color 0.2s, opacity 0.3s; }
 nav .nav-links a:hover { color: var(--accent-light); }
-nav .cta-btn { background: var(--accent); color: var(--white); padding: 8px 20px; border-radius: 20px; font-size: 14px; font-weight: 600; transition: background 0.2s, transform 0.2s; position: relative; }
+nav .nav-links.disabled a { opacity: 0.3; pointer-events: none; cursor: not-allowed; }
+nav .cta-btn { background: var(--accent); color: var(--white); padding: 8px 20px; border-radius: 20px; font-size: 14px; font-weight: 600; transition: background 0.2s, transform 0.2s, opacity 0.3s; position: relative; }
 nav .cta-btn:hover { background: var(--accent-light); transform: scale(1.03); }
+nav .cta-btn.disabled { opacity: 0.4; pointer-events: none; cursor: not-allowed; }
 
 /* ─── Product Toggle ──────────────────────────────────────────── */
 .product-toggle-bar {
@@ -97,7 +99,7 @@ nav .cta-btn:hover { background: var(--accent-light); transform: scale(1.03); }
   top: 64px;
   left: 0;
   right: 0;
-  z-index: 99;
+  z-index: 10001;
   display: flex;
   justify-content: center;
   padding: 12px 0;
@@ -337,9 +339,96 @@ footer .copyright { font-size: 12px; opacity: 0.5; }
   .toggle-option span { font-size: 13px; }
   .toggle-option img { width: 28px; height: 28px; }
 }
+
+/* ─── Countdown Overlay ──────────────────────────────────────── */
+#titanx-countdown-overlay {
+  position: fixed;
+  top: 0; left: 0; right: 0; bottom: 0;
+  z-index: 10000;
+  background: #050a0f;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  transition: opacity 1s ease;
+}
+#titanx-countdown-overlay.fade-out {
+  opacity: 0;
+  pointer-events: none;
+}
+.countdown-content {
+  text-align: center;
+  position: relative;
+  z-index: 2;
+}
+.countdown-logo {
+  width: 140px;
+  height: 140px;
+  margin: 0 auto 32px;
+  filter: drop-shadow(0 0 60px rgba(0, 212, 255, 0.4));
+  animation: logoFloat 4s ease-in-out infinite;
+}
+.countdown-hype {
+  font-size: clamp(22px, 4vw, 36px);
+  font-weight: 700;
+  color: #fff;
+  letter-spacing: -0.02em;
+  min-height: 50px;
+  margin-bottom: 48px;
+  transition: opacity 0.6s ease;
+}
+.countdown-hype.fading { opacity: 0; }
+.countdown-timer {
+  font-size: clamp(24px, 5vw, 48px);
+  font-weight: 800;
+  letter-spacing: -0.03em;
+  background: linear-gradient(135deg, #33ddff, #0099ff, #00d4ff);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  margin-bottom: 16px;
+  font-variant-numeric: tabular-nums;
+}
+.countdown-date {
+  font-size: 16px;
+  color: rgba(255,255,255,0.4);
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  font-weight: 500;
+}
+.countdown-tagline {
+  margin-top: 32px;
+  font-size: 14px;
+  color: rgba(0, 212, 255, 0.6);
+  font-weight: 500;
+}
+
+/* Floating word cloud */
+.word-cloud {
+  position: absolute;
+  top: 0; left: 0; right: 0; bottom: 0;
+  overflow: hidden;
+  pointer-events: none;
+  z-index: 1;
+}
+.cloud-word {
+  position: absolute;
+  color: rgba(0, 212, 255, 0.05);
+  font-weight: 600;
+  white-space: nowrap;
+  animation: cloudDrift linear infinite;
+  user-select: none;
+}
+@keyframes cloudDrift {
+  0% { transform: translate(0, 0); }
+  25% { transform: translate(30px, -20px); }
+  50% { transform: translate(-20px, 30px); }
+  75% { transform: translate(40px, 10px); }
+  100% { transform: translate(0, 0); }
+}
 </style>
 </head>
-<body class="titanclip">
+<body class="titanx">
 
 <!-- Scanline overlay for transitions -->
 <div class="scanline-overlay" id="scanline"></div>
@@ -347,34 +436,34 @@ footer .copyright { font-size: 12px; opacity: 0.5; }
 <!-- ═══ Navigation ═══ -->
 <nav>
   <div class="logo-group">
-    <img src="assets/titan-claw-logo.png" alt="TitanClip" id="nav-logo">
-    <span class="nav-brand-text" id="nav-brand">TitanClip</span>
+    <img src="assets/titanx-logo.png" alt="TitanX" id="nav-logo">
+    <span class="nav-brand-text" id="nav-brand">TitanX</span>
     <div class="divider" style="width:1px;height:24px;background:rgba(255,255,255,0.2);margin:0 4px;"></div>
     <a href="https://cesltd.com" target="_blank" style="display:flex;align-items:center;gap:6px;">
       <img src="assets/ces-logo.png" alt="CES" style="height:24px;border-radius:4px;">
       <span style="font-size:11px;color:rgba(255,255,255,0.5);font-weight:400;">Built by CES</span>
     </a>
   </div>
-  <div class="nav-links">
+  <div class="nav-links disabled" id="nav-links">
     <a href="#features">Features</a>
     <a href="#screenshots">Product</a>
     <a href="#security">Security</a>
     <a href="#quickstart">Get Started</a>
   </div>
-  <a href="https://github.com/CES-Ltd/TitanClip/releases/download/v1.0.0-beta/TitanClip-1.0.0-arm64.dmg" class="cta-btn" id="nav-cta">Download</a>
+  <a href="https://github.com/CES-Ltd/TitanX/releases/download/v1.9.11/TitanX-1.9.11-mac-arm64.dmg" class="cta-btn disabled" id="nav-cta">Download</a>
 </nav>
 
 <!-- ═══ Product Toggle ═══ -->
 <div class="product-toggle-bar">
   <div class="product-toggle">
-    <div class="toggle-option active" id="opt-titanclip" onclick="switchProduct('titanclip')">
+    <div class="toggle-option" id="opt-titanclip" onclick="switchProduct('titanclip')">
       <img src="assets/titan-claw-logo.png" alt="TitanClip">
       <span>TitanClip</span>
     </div>
     <div class="toggle-switch" id="toggle-switch" onclick="toggleProduct()">
       <div class="toggle-knob" id="toggle-knob"></div>
     </div>
-    <div class="toggle-option" id="opt-titanx" onclick="switchProduct('titanx')">
+    <div class="toggle-option active" id="opt-titanx" onclick="switchProduct('titanx')">
       <img src="assets/titanx-logo.png" alt="TitanX">
       <span>TitanX</span>
     </div>
@@ -384,7 +473,7 @@ footer .copyright { font-size: 12px; opacity: 0.5; }
 <!-- ══════════════════════════════════════════════════════════════ -->
 <!-- ═══ TITANCLIP CONTENT ═══ -->
 <!-- ══════════════════════════════════════════════════════════════ -->
-<div class="product-titanclip" id="content-titanclip">
+<div class="product-titanclip hidden" id="content-titanclip">
 
 <!-- Hero -->
 <section class="hero">
@@ -625,7 +714,7 @@ footer .copyright { font-size: 12px; opacity: 0.5; }
 <!-- ══════════════════════════════════════════════════════════════ -->
 <!-- ═══ TITANX CONTENT ═══ -->
 <!-- ══════════════════════════════════════════════════════════════ -->
-<div class="product-titanx hidden" id="content-titanx">
+<div class="product-titanx" id="content-titanx">
 
 <!-- Hero -->
 <section class="hero">
@@ -633,8 +722,10 @@ footer .copyright { font-size: 12px; opacity: 0.5; }
   <h1 class="reveal visible">Hardened AI<br><span class="gradient">Infrastructure</span></h1>
   <p class="subtitle reveal visible">The security-first orchestration platform for mission-critical AI deployments. TitanX fuses enterprise-grade agent management with deny-by-default network policies, HMAC-signed audit logs, and runtime IAM enforcement — so your agents operate under absolute control, not just convenience.</p>
   <div class="hero-cta reveal visible">
-    <a href="#" class="btn-primary">Download for macOS <span class="release-badge">Releasing April 14</span></a>
-    <a href="#" class="btn-secondary">View on GitHub <span class="release-badge">Releasing April 14</span></a>
+    <a href="https://github.com/CES-Ltd/TitanX/releases/download/v1.9.11/TitanX-1.9.11-mac-arm64.dmg" class="btn-primary">Download for macOS (Apple Silicon)</a>
+    <a href="https://github.com/CES-Ltd/TitanX/releases/download/v1.9.11/TitanX-1.9.11-mac-x64.dmg" class="btn-primary" style="background:transparent;border:1.5px solid rgba(255,255,255,0.3);">macOS (Intel)</a>
+    <a href="https://github.com/CES-Ltd/TitanX/releases/download/v1.9.11/TitanX-1.9.11-win-arm64.exe" class="btn-primary" style="background:transparent;border:1.5px solid rgba(255,255,255,0.3);">Windows</a>
+    <a href="https://github.com/CES-Ltd/TitanX" class="btn-secondary" target="_blank">View on GitHub</a>
   </div>
   <div class="scroll-hint">
     <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M7 13l5 5 5-5M7 7l5 5 5-5"/></svg>
@@ -884,16 +975,16 @@ footer .copyright { font-size: 12px; opacity: 0.5; }
   <div class="container">
     <h2 class="reveal visible">Get Started with TitanX</h2>
     <div class="code-block reveal visible">
-      <span class="comment"># Install from DMG (macOS) — releasing April 14</span><br>
-      <span class="cmd">Download TitanX-1.0.0-arm64.dmg from GitHub Releases</span><br>
+      <span class="comment"># Install from DMG (macOS)</span><br>
+      <span class="cmd">Download TitanX-1.9.11-mac-arm64.dmg from GitHub Releases</span><br>
       <span class="cmd">Drag to Applications &rarr; Launch &rarr; Complete security onboarding</span><br><br>
       <span class="comment"># Or build from source</span><br>
       git clone https://github.com/CES-Ltd/TitanX.git<br>
       cd TitanX && bun install<br>
-      bun run build:all<br>
-      bun run dev
+      bun run postinstall<br>
+      bun start
     </div>
-    <a href="#" class="btn-primary" style="display:inline-block; background:var(--accent); color:#fff; padding:14px 36px; border-radius:28px; font-size:17px; font-weight:600; margin-top:16px;">Coming April 14 <span class="release-badge">Releasing April 14</span></a>
+    <a href="https://github.com/CES-Ltd/TitanX/releases/tag/v1.9.11" class="btn-primary" style="display:inline-block; background:var(--accent); color:#fff; padding:14px 36px; border-radius:28px; font-size:17px; font-weight:600; margin-top:16px;" target="_blank">Download v1.9.11</a>
   </div>
 </section>
 
@@ -904,8 +995,8 @@ footer .copyright { font-size: 12px; opacity: 0.5; }
 <!-- ═══ Footer ═══ -->
 <footer>
   <div class="footer-logos reveal">
-    <img src="assets/titan-claw-logo.png" alt="TitanClip" id="footer-logo-clip" style="height:48px;">
-    <img src="assets/titanx-logo.png" alt="TitanX" id="footer-logo-x" style="height:48px; display:none;">
+    <img src="assets/titan-claw-logo.png" alt="TitanClip" id="footer-logo-clip" style="height:48px; display:none;">
+    <img src="assets/titanx-logo.png" alt="TitanX" id="footer-logo-x" style="height:48px;">
     <div class="divider"></div>
     <img src="assets/ces-logo.png" alt="CES Limited" style="height:36px; border-radius:6px;">
   </div>
@@ -923,10 +1014,22 @@ footer .copyright { font-size: 12px; opacity: 0.5; }
   <div class="copyright">&copy; 2026 CES Limited. All rights reserved.</div>
 </footer>
 
+<!-- Countdown Overlay (must be before scripts so JS can find elements) -->
+<div id="titanx-countdown-overlay">
+  <div class="word-cloud" id="word-cloud"></div>
+  <div class="countdown-content">
+    <img src="assets/titanx-logo.png" alt="TitanX" class="countdown-logo">
+    <div class="countdown-hype" id="countdown-hype"></div>
+    <div class="countdown-timer" id="countdown-timer">--:--:--</div>
+    <div class="countdown-date">April 14, 2026 &middot; 10:00 AM CT</div>
+    <div class="countdown-tagline">Enterprise AI Agent Orchestration Platform</div>
+  </div>
+</div>
+
 <!-- ═══ Scripts ═══ -->
 <script>
 // ─── Product toggle logic ─────────────────────────────────────
-let currentProduct = 'titanclip';
+let currentProduct = 'titanx';
 
 function switchProduct(product) {
   if (product === currentProduct) return;
@@ -955,8 +1058,8 @@ function switchProduct(product) {
     navLogo.src = 'assets/titanx-logo.png';
     navLogo.alt = 'TitanX';
     navBrand.textContent = 'TitanX';
-    navCta.textContent = 'Coming Soon';
-    navCta.href = '#';
+    navCta.textContent = 'Download';
+    navCta.href = 'https://github.com/CES-Ltd/TitanX/releases/download/v1.9.11/TitanX-1.9.11-mac-arm64.dmg';
   } else {
     navLogo.src = 'assets/titan-claw-logo.png';
     navLogo.alt = 'TitanClip';
@@ -971,7 +1074,7 @@ function switchProduct(product) {
 
   if (product === 'titanx') {
     document.getElementById('footer-powered').innerHTML = 'Built on <a href="https://github.com/CES-Ltd/TitanClip" target="_blank">TitanClip</a> open-source platform';
-    document.getElementById('footer-links').innerHTML = '<a href="#">GitHub (coming soon)</a><a href="#">Releases</a><a href="https://cesltd.com">CES Limited</a>';
+    document.getElementById('footer-links').innerHTML = '<a href="https://github.com/CES-Ltd/TitanX" target="_blank">GitHub</a><a href="https://github.com/CES-Ltd/TitanX/releases" target="_blank">Releases</a><a href="https://cesltd.com">CES Limited</a>';
   } else {
     document.getElementById('footer-powered').innerHTML = 'Powered by <a href="https://github.com/paperclipai/paperclip" target="_blank">Paperclip</a> open-source platform';
     document.getElementById('footer-links').innerHTML = '<a href="https://github.com/CES-Ltd/TitanClip">GitHub</a><a href="https://github.com/CES-Ltd/TitanClip/releases">Releases</a><a href="https://cesltd.com">CES Limited</a>';
@@ -1037,6 +1140,125 @@ window.addEventListener('scroll', () => {
     nav.style.background = 'rgba(0,0,0,0.7)';
   }
 });
+
+// ─── Countdown Overlay Logic ──────────────────────────────────
+(function() {
+  // PRODUCTION: April 14, 2026 10:00 AM Central
+  const LAUNCH_DATE = new Date('2026-04-14T10:00:00-05:00');
+
+  const overlay = document.getElementById('titanx-countdown-overlay');
+  if (!overlay) return;
+
+  var navCta = document.getElementById('nav-cta');
+  var navLinks = document.getElementById('nav-links');
+
+  // If already past launch date, remove overlay and enable everything
+  if (Date.now() >= LAUNCH_DATE.getTime()) {
+    overlay.remove();
+    document.body.style.overflow = '';
+    if (navCta) navCta.classList.remove('disabled');
+    if (navLinks) navLinks.classList.remove('disabled');
+    return;
+  }
+
+  // Block scrolling while overlay is visible
+  document.body.style.overflow = 'hidden';
+
+  const timerEl = document.getElementById('countdown-timer');
+  const hypeEl = document.getElementById('countdown-hype');
+
+  const hypeMessages = [
+    'Your AI team, working like real employees.',
+    'A digital twin of your entire workforce.',
+    'AI agents that collaborate like human teams.',
+    "Your company's digital employee twins.",
+    'Teams of AI that think, plan, and execute together.',
+    'The future of work is a digital twin.',
+    'AI employees with real accountability.',
+    'One platform. Infinite digital workers.',
+    'Your AI workforce, governed and secure.',
+    'Digital twins that run your business operations.',
+  ];
+
+  let hypeIdx = 0;
+  function rotateHype() {
+    hypeEl.classList.add('fading');
+    setTimeout(function() {
+      hypeIdx = (hypeIdx + 1) % hypeMessages.length;
+      hypeEl.textContent = hypeMessages[hypeIdx];
+      hypeEl.classList.remove('fading');
+    }, 600);
+  }
+  hypeEl.textContent = hypeMessages[0];
+  setInterval(rotateHype, 5000);
+
+  function updateTimer() {
+    var diff = LAUNCH_DATE.getTime() - Date.now();
+    if (diff <= 0) {
+      // Timer expired — reveal the site and enable everything
+      overlay.classList.add('fade-out');
+      document.body.style.overflow = '';
+      if (navCta) navCta.classList.remove('disabled');
+      if (navLinks) navLinks.classList.remove('disabled');
+      window.scrollTo({ top: 0 });
+      setTimeout(function() {
+        overlay.remove();
+        if (typeof reobserveReveals === 'function') reobserveReveals();
+      }, 1200);
+      return;
+    }
+    var d = Math.floor(diff / 86400000);
+    var h = Math.floor((diff % 86400000) / 3600000);
+    var m = Math.floor((diff % 3600000) / 60000);
+    var s = Math.floor((diff % 60000) / 1000);
+    var parts = [];
+    if (d > 0) parts.push(d + (d === 1 ? ' Day' : ' Days'));
+    parts.push(h + (h === 1 ? ' Hour' : ' Hours'));
+    parts.push(m + (m === 1 ? ' Minute' : ' Minutes'));
+    parts.push(s + (s === 1 ? ' Second' : ' Seconds'));
+    timerEl.textContent = parts.join(', ');
+    requestAnimationFrame(function() { setTimeout(updateTimer, 1000); });
+  }
+  updateTimer();
+
+  // Build floating word cloud
+  var words = ['Zero Trust','Audit Trail','Compliance','IAM','Encryption','Governance','RBAC','MFA','SOC2','HMAC','Policy','Firewall','Sandbox','Deny-by-Default','Observability','Telemetry','Secure','Hardened','Enterprise','Control Plane'];
+  var cloud = document.getElementById('word-cloud');
+  if (cloud) {
+    for (var i = 0; i < 40; i++) {
+      var span = document.createElement('span');
+      span.className = 'cloud-word';
+      span.textContent = words[i % words.length];
+      span.style.left = Math.random() * 100 + '%';
+      span.style.top = Math.random() * 100 + '%';
+      span.style.fontSize = (12 + Math.random() * 18) + 'px';
+      span.style.opacity = 0.03 + Math.random() * 0.05;
+      span.style.animationDuration = (20 + Math.random() * 25) + 's';
+      span.style.animationDelay = (-Math.random() * 20) + 's';
+      cloud.appendChild(span);
+    }
+  }
+
+  // Show/hide overlay based on product toggle
+  var origSwitch = window.switchProduct;
+  window.switchProduct = function(product) {
+    var overlayActive = overlay.parentNode && Date.now() < LAUNCH_DATE.getTime();
+    if (overlayActive) {
+      if (product === 'titanx') {
+        overlay.style.display = 'flex';
+        document.body.style.overflow = 'hidden';
+        if (navCta) navCta.classList.add('disabled');
+        if (navLinks) navLinks.classList.add('disabled');
+      } else {
+        overlay.style.display = 'none';
+        document.body.style.overflow = '';
+        if (navCta) navCta.classList.remove('disabled');
+        if (navLinks) navLinks.classList.remove('disabled');
+      }
+    }
+    origSwitch(product);
+  };
+})();
 </script>
 
 </body>
